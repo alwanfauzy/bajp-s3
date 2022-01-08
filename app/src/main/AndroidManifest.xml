@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.alwan.bajpsubmission2">
+    package="com.alwan.bajpsubmission3">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -15,7 +15,7 @@
         tools:node="replace"
         tools:ignore="AllowBackup">
         <activity
-            android:name="com.alwan.bajpsubmission2.ui.SplashScreenActivity"
+            android:name="com.alwan.bajpsubmission3.ui.SplashScreenActivity"
             android:exported="true"
             android:theme="@style/splashScreenTheme">
             <intent-filter>
@@ -25,11 +25,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.alwan.bajpsubmission2.ui.detail.DetailActivity"
+            android:name="com.alwan.bajpsubmission3.ui.detail.DetailActivity"
             android:exported="true"
-            android:parentActivityName="com.alwan.bajpsubmission2.ui.MainActivity" />
+            android:parentActivityName="com.alwan.bajpsubmission3.ui.MainActivity" />
         <activity
-            android:name="com.alwan.bajpsubmission2.ui.MainActivity"
+            android:name="com.alwan.bajpsubmission3.ui.MainActivity"
             android:exported="true" />
     </application>
 

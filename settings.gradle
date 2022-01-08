@@ -6,5 +6,5 @@ dependencyResolutionManagement {
          // Warning: this repository is going to shut down soon
     }
 }
-rootProject.name = "BAJP Submission 2"
+rootProject.name = "BAJP Submission 3"
 include ':app'
