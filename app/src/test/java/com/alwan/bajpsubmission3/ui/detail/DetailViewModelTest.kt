@@ -4,9 +4,12 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.alwan.bajpsubmission3.data.CatalogueRepository
-import com.alwan.bajpsubmission3.data.source.local.entity.CatalogueDetailEntity
+import com.alwan.bajpsubmission3.data.source.local.entity.MovieEntity
+import com.alwan.bajpsubmission3.data.source.local.entity.TvShowEntity
 import com.alwan.bajpsubmission3.utils.DummyCatalogue
+import com.alwan.bajpsubmission3.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
@@ -27,12 +30,16 @@ class DetailViewModelTest {
     private lateinit var catalogueRepository: CatalogueRepository
 
     @Mock
-    private lateinit var movieObserver: Observer<CatalogueDetailEntity>
+    private lateinit var movieObserver: Observer<Resource<MovieEntity>>
 
     @Mock
-    private lateinit var tvShowObserver: Observer<CatalogueDetailEntity>
+    private lateinit var tvShowObserver: Observer<Resource<TvShowEntity>>
 
     private lateinit var detailViewModel: DetailViewModel
+    private val dummyMovie = DummyCatalogue.getMovies()[0]
+    private val dummyMovieId = dummyMovie.id
+    private val dummyTvShow = DummyCatalogue.getTvShows()[0]
+    private val dummyTvShowId = dummyTvShow.id
 
     @Before
     fun setUp() {
@@ -41,51 +48,71 @@ class DetailViewModelTest {
 
     @Test
     fun getDetailMovie() {
-        val dummyMovieDetail = DummyCatalogue.getMovieDetails()[0]
-        val dummyMovieDetailId = dummyMovieDetail.id.toString()
-        val movieDetail = MutableLiveData<CatalogueDetailEntity>()
-        movieDetail.value = dummyMovieDetail
+        val dummyDetailMovie = Resource.success(DummyCatalogue.getMovies()[0])
+        val movie = MutableLiveData<Resource<MovieEntity>>()
+        movie.value = dummyDetailMovie
 
-        `when`(catalogueRepository.getDetailMovie(dummyMovieDetailId))
-            .thenReturn(movieDetail)
-        val movieDetailEntity =
-            detailViewModel.getDetailMovie(dummyMovieDetailId.toInt()).value as CatalogueDetailEntity
-        verify(catalogueRepository).getDetailMovie(dummyMovieDetailId)
+        `when`(catalogueRepository.getDetailMovie(dummyMovieId.toString())).thenReturn(movie)
+        val detailMovieEntity = dummyMovieId?.let { detailViewModel.getDetailMovie(it).value } as Resource<MovieEntity>
+        verify(catalogueRepository).getDetailMovie(dummyMovieId.toString())
 
-        assertNotNull(movieDetailEntity)
-        assertEquals(dummyMovieDetail.id, movieDetailEntity.id)
-        assertEquals(dummyMovieDetail.name, movieDetailEntity.name)
-        assertEquals(dummyMovieDetail.posterPath, movieDetailEntity.posterPath)
-        assertEquals(dummyMovieDetail.overview, movieDetailEntity.overview)
-        assertEquals(dummyMovieDetail.genres, movieDetailEntity.genres)
-        assertEquals(dummyMovieDetail.voteAverage, movieDetailEntity.voteAverage)
+        assertNotNull(detailMovieEntity)
+        detailMovieEntity.data?.let {
+            assertEquals(dummyMovie.id, it.id)
+            assertEquals(dummyMovie.title, it.title)
+            assertEquals(dummyMovie.posterPath, it.posterPath)
+            assertEquals(dummyMovie.overview, it.overview)
+            assertEquals(dummyMovie.genres, it.genres)
+            assertEquals(dummyMovie.voteAverage, it.voteAverage)
+        }
 
-        detailViewModel.getDetailMovie(dummyMovieDetailId.toInt()).observeForever(movieObserver)
-        verify(movieObserver).onChanged(dummyMovieDetail)
+        dummyMovieId.let { detailViewModel.getDetailMovie(it).observeForever(movieObserver) }
+        verify(movieObserver).onChanged(dummyDetailMovie)
     }
 
     @Test
     fun getDetailTvShow() {
-        val dummyTvShowDetail = DummyCatalogue.getTvShowDetails()[0]
-        val dummyTvShowDetailId = dummyTvShowDetail.id.toString()
-        val tvShowDetail = MutableLiveData<CatalogueDetailEntity>()
-        tvShowDetail.value = dummyTvShowDetail
+        val dummyDetailTvShow = Resource.success(DummyCatalogue.getTvShows()[0])
+        val tvShow = MutableLiveData<Resource<TvShowEntity>>()
+        tvShow.value = dummyDetailTvShow
 
-        `when`(catalogueRepository.getDetailTvShow(dummyTvShowDetailId))
-            .thenReturn(tvShowDetail)
-        val tvShowDetailEntity =
-            detailViewModel.getDetailTvShow(dummyTvShowDetailId.toInt()).value as CatalogueDetailEntity
-        verify(catalogueRepository).getDetailTvShow(dummyTvShowDetailId)
+        `when`(catalogueRepository.getDetailTvShow(dummyTvShowId.toString())).thenReturn(tvShow)
+        val detailTvShowEntity = dummyTvShowId?.let { detailViewModel.getDetailTvShow(it).value } as Resource<TvShowEntity>
+        verify(catalogueRepository).getDetailTvShow(dummyTvShowId.toString())
 
-        assertNotNull(tvShowDetailEntity)
-        assertEquals(dummyTvShowDetail.id, tvShowDetailEntity.id)
-        assertEquals(dummyTvShowDetail.name, tvShowDetailEntity.name)
-        assertEquals(dummyTvShowDetail.posterPath, tvShowDetailEntity.posterPath)
-        assertEquals(dummyTvShowDetail.overview, tvShowDetailEntity.overview)
-        assertEquals(dummyTvShowDetail.genres, tvShowDetailEntity.genres)
-        assertEquals(dummyTvShowDetail.voteAverage, tvShowDetailEntity.voteAverage)
+        assertNotNull(detailTvShowEntity)
+        detailTvShowEntity.data?.let {
+            assertEquals(dummyTvShow.id, it.id)
+            assertEquals(dummyTvShow.name, it.name)
+            assertEquals(dummyTvShow.posterPath, it.posterPath)
+            assertEquals(dummyTvShow.overview, it.overview)
+            assertEquals(dummyTvShow.genres, it.genres)
+            assertEquals(dummyTvShow.voteAverage, it.voteAverage)
+        }
 
-        detailViewModel.getDetailTvShow(dummyTvShowDetailId.toInt()).observeForever(tvShowObserver)
-        verify(tvShowObserver).onChanged(dummyTvShowDetail)
+        dummyTvShowId.let { detailViewModel.getDetailTvShow(it).observeForever(tvShowObserver) }
+        verify(tvShowObserver).onChanged(dummyDetailTvShow)
+    }
+
+    @Test
+    fun setFavoriteMovie() {
+        val dummyDetailMovie = Resource.success(DummyCatalogue.getMovies()[0])
+        val movie = MutableLiveData<Resource<MovieEntity>>()
+        movie.value = dummyDetailMovie
+
+        dummyDetailMovie.data?.let { detailViewModel.setFavoriteMovie(it) }
+        verify(catalogueRepository).setFavoriteMovie(movie.value!!.data as MovieEntity, true)
+        verifyNoMoreInteractions(movieObserver)
+    }
+
+    @Test
+    fun setFavoriteTvShow() {
+        val dummyDetailTvShow = Resource.success(DummyCatalogue.getTvShows()[0])
+        val tvShow = MutableLiveData<Resource<TvShowEntity>>()
+        tvShow.value = dummyDetailTvShow
+
+        dummyDetailTvShow.data?.let { detailViewModel.setFavoriteTvShow(it) }
+        verify(catalogueRepository).setFavoriteTvShow(tvShow.value!!.data as TvShowEntity, true)
+        verifyNoMoreInteractions(movieObserver)
     }
 }

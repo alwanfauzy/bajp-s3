@@ -10,4 +10,15 @@
     <string name="change_language">Change Language</string>
     <string name="image_splash_screen">Image Splash Screen</string>
     <string name="image_empty">Image Empty</string>
+    <string name="best_vote">Best Vote</string>
+    <string name="worst_vote">Worst Vote</string>
+    <string name="random">Random</string>
+    <string name="sort">Sort</string>
+    <string name="discover">Discover</string>
+    <string name="favorite">Favorite</string>
+    <string name="data_empty">Data Empty</string>
+    <string name="add_to_favorite">Add to Favorite</string>
+    <string name="undo">Undo</string>
+    <string name="favorite_remove">Favorite item removed</string>
+    <string name="detail">Detail</string>
 </resources>

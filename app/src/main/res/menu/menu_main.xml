@@ -3,7 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_language"
-        android:icon="@drawable/ic_baseline_language_24"
+        android:icon="@drawable/ic_language"
         android:title="@string/change_language"
         app:showAsAction="ifRoom" />
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_sort_best"
+            android:checked="true"
+            android:title="@string/best_vote" />
+        <item
+            android:id="@+id/menu_sort_worst"
+            android:checked="false"
+            android:title="@string/worst_vote" />
+        <item
+            android:id="@+id/menu_sort_random"
+            android:checked="false"
+            android:title="@string/random" />
+    </group>
 </menu>

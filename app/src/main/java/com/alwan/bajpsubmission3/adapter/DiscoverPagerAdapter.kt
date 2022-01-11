@@ -1,12 +1,11 @@
 package com.alwan.bajpsubmission3.adapter
 
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.alwan.bajpsubmission3.ui.movie.MovieFragment
-import com.alwan.bajpsubmission3.ui.tvshow.TvShowFragment
+import com.alwan.bajpsubmission3.ui.discover.movie.MovieFragment
+import com.alwan.bajpsubmission3.ui.discover.tvshow.TvShowFragment
 
-class SectionsPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
+class DiscoverPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
     override fun createFragment(position: Int): Fragment {
         var fragment: Fragment? = null

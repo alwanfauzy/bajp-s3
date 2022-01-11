@@ -10,4 +10,15 @@
     <string name="change_language">Ganti Bahasa</string>
     <string name="image_splash_screen">Gambar Splash Screen</string>
     <string name="image_empty">Gambar Kosong</string>
+    <string name="best_vote">Vote Terbaik</string>
+    <string name="worst_vote">Vote Terburuk</string>
+    <string name="random">Acak</string>
+    <string name="sort">Urutkan</string>
+    <string name="discover">Telusuri</string>
+    <string name="favorite">Favorit</string>
+    <string name="data_empty">Data Kosong</string>
+    <string name="add_to_favorite">Tambah Favorit</string>
+    <string name="undo">Undo</string>
+    <string name="favorite_remove">Dihilangkan dari Favorit</string>
+    <string name="detail">Detail</string>
 </resources>

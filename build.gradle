@@ -17,3 +17,7 @@ buildscript {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext {
+    pagingVersion = '2.1.2'
+}

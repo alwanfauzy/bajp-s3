@@ -1,16 +1,11 @@
 package com.alwan.bajpsubmission3.ui
 
-import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
-import android.view.Menu
-import android.view.MenuItem
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import com.alwan.bajpsubmission3.R
-import com.alwan.bajpsubmission3.adapter.SectionsPagerAdapter
 import com.alwan.bajpsubmission3.databinding.ActivityMainBinding
-import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
@@ -22,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.elevation = 0f
 
-        setupViewPager()
+        setupNavigation()
     }
 
     override fun onDestroy() {
@@ -30,36 +25,12 @@ class MainActivity : AppCompatActivity() {
         _binding = null
     }
 
-    private fun setupViewPager() {
-        val sectionsPagerAdapter = SectionsPagerAdapter(this)
-        val viewPager = binding.viewPagerCatalogue
-        viewPager.adapter = sectionsPagerAdapter
-        val tabs = binding.tabsCatalogue
-        TabLayoutMediator(tabs, viewPager) { tab, position ->
-            tab.text = resources.getString(TAB_TITLES[position])
-        }.attach()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
-            R.id.menu_language -> {
-                startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    companion object {
-        @StringRes
-        private val TAB_TITLES = intArrayOf(
-            R.string.tab_text_1,
-            R.string.tab_text_2
+    private fun setupNavigation() {
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_main) as NavHostFragment
+        NavigationUI.setupWithNavController(
+            binding.bottomNavMain,
+            navHostFragment.navController
         )
     }
 }

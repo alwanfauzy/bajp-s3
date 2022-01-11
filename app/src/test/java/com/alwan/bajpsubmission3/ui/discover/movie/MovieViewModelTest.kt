@@ -1,11 +1,13 @@
-package com.alwan.bajpsubmission3.ui.movie
+package com.alwan.bajpsubmission3.ui.discover.movie
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.paging.PagedList
 import com.alwan.bajpsubmission3.data.CatalogueRepository
-import com.alwan.bajpsubmission3.data.source.local.entity.CatalogueEntity
-import com.alwan.bajpsubmission3.utils.DummyCatalogue
+import com.alwan.bajpsubmission3.data.source.local.entity.MovieEntity
+import com.alwan.bajpsubmission3.utils.SortUtils.VOTE_BEST
+import com.alwan.bajpsubmission3.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -27,7 +29,10 @@ class MovieViewModelTest {
     private lateinit var catalogueRepository: CatalogueRepository
 
     @Mock
-    private lateinit var moviesObserver: Observer<ArrayList<CatalogueEntity>>
+    private lateinit var moviesObserver: Observer<Resource<PagedList<MovieEntity>>>
+
+    @Mock
+    private lateinit var pagedList: PagedList<MovieEntity>
 
     private lateinit var viewModel: MovieViewModel
 
@@ -38,17 +43,18 @@ class MovieViewModelTest {
 
     @Test
     fun getMovies() {
-        val dummyMovies = DummyCatalogue.getMovies()
-        val movies = MutableLiveData<ArrayList<CatalogueEntity>>()
+        val dummyMovies = Resource.success(pagedList)
+        `when`(dummyMovies.data?.size).thenReturn(3)
+        val movies = MutableLiveData<Resource<PagedList<MovieEntity>>>()
         movies.value = dummyMovies
 
-        `when`(catalogueRepository.getMovies()).thenReturn(movies)
-        val movie = viewModel.getMovies().value
-        verify(catalogueRepository).getMovies()
+        `when`(catalogueRepository.getMovies(VOTE_BEST)).thenReturn(movies)
+        val movie = viewModel.getMovies(VOTE_BEST).value?.data
+        verify(catalogueRepository).getMovies(VOTE_BEST)
         assertNotNull(movie)
         assertEquals(3, movie?.size)
 
-        viewModel.getMovies().observeForever(moviesObserver)
+        viewModel.getMovies(VOTE_BEST).observeForever(moviesObserver)
         verify(moviesObserver).onChanged(dummyMovies)
     }
 }
